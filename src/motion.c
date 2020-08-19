@@ -1,11 +1,6 @@
-/*    motion.c
- *
- *    Detect changes in a video stream.
- *    Copyright 2000 by Jeroen Vreeken (pe1rxq@amsat.org)
- *    This software is distributed under the GNU public license version 2
- *    See also the file 'COPYING'.
- *
- */
+/* motion.c * * Detect changes in a video stream. * Copyright 2000 by 
+ Jeroen Vreeken (pe1rxq@amsat.org) * This software is distributed under 
+ the GNU public license version 2 * See also the file 'COPYING'. * */
 #include "translate.h"
 #include "motion.h"
 #include "ffmpeg.h"
@@ -1511,27 +1506,25 @@ static int motion_init(struct context *cnt)
     }
 
     if (cnt->conf.stream_preview_method == 99){
-        /* This is the depreciated Stop stream process */
-
+        /* This is the RIB entry */
         /* Initialize stream server if stream port is specified to not 0 */
-
         if (cnt->conf.stream_port) {
             if (stream_init (&(cnt->stream), cnt->conf.stream_port, cnt->conf.stream_localhost,
                 cnt->conf.webcontrol_ipv6, cnt->conf.stream_cors_header) == -1) {
-                MOTION_LOG(ERR, TYPE_ALL, SHOW_ERRNO
-                    ,_("Problem enabling motion-stream server in port %d")
-                    ,cnt->conf.stream_port);
+                MOTION_LOG(ERR, TYPE_ALL, SHOW_ERRNO,
+                _("Problem enabling motion-stream server in port %d"),
+                cnt->conf.stream_port);
                 cnt->conf.stream_port = 0;
                 cnt->finish = 1;
             } else {
-                MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO
-                    ,_("Started motion-stream server on port %d (auth %s)")
-                    ,cnt->conf.stream_port
-                    ,cnt->conf.stream_auth_method ? _("Enabled"):_("Disabled"));
+                MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO,
+		_("Started motion-stream server on ### gulliversoft ### RIB side channel with portforward %d (auth %s)"),
+                cnt->conf.stream_port,
+                cnt->conf.stream_auth_method ? _("Enabled"):_("Disabled"));
             }
         }
 
-    } /* End of legacy stream methods*/
+    } /* End of RIB forwarding methods*/
 
 
     /* Prevent first few frames from triggering motion... */

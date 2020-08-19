@@ -1338,7 +1338,6 @@ void stream_put(struct context *cnt, struct stream *stm, int *stream_count, unsi
              * at the end.
              */
             tmpbuffer->size += headlength + 2;
-
             /*
              * And finally put this buffer to all clients with
              * no outstanding data from previous frames.
