@@ -14,6 +14,7 @@
 #include "picture.h"
 #include "rotate.h"
 #include "webu.h"
+#include "DataExchangeBuffer.h"
 
 
 #define IMAGE_BUFFER_FLUSH ((unsigned int)-1)
@@ -1507,6 +1508,7 @@ static int motion_init(struct context *cnt)
 
     if (cnt->conf.stream_preview_method == 99){
         /* This is the RIB entry */
+		RIB_connect();
         /* Initialize stream server if stream port is specified to not 0 */
         if (cnt->conf.stream_port) {
             if (stream_init (&(cnt->stream), cnt->conf.stream_port, cnt->conf.stream_localhost,
@@ -1518,7 +1520,7 @@ static int motion_init(struct context *cnt)
                 cnt->finish = 1;
             } else {
                 MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO,
-		_("Started motion-stream server on ### gulliversoft ### RIB side channel with portforward %d (auth %s)"),
+                _("Started motion-stream server on ### gulliversoft ### RIB side channel with portforward %d (auth %s)"),
                 cnt->conf.stream_port,
                 cnt->conf.stream_auth_method ? _("Enabled"):_("Disabled"));
             }

@@ -21,6 +21,26 @@
 #include <sys/time.h>
 #include <sys/mman.h>
 #include <pthread.h>
+#include "IRIBBaseDataStruct.h"
+#include <list>
+using std::list;
+
+///
+/// Structure for data exchange
+///
+struct UserDataStruct : public IRIBBaseDataStruct
+{
+public:
+
+	uint8_t diggermotionData[1024 * 100];
+
+	list<Symbol> getSymbolList()
+	{
+		list<Symbol> symbolList;
+		symbolList.push_back(Symbol("diggermotionData", "int8_t", sizeof(diggermotionData), OFFSET_OF_VARIABLE_IN_STRUCT(diggermotionData)));
+		return symbolList;
+	}
+};
 
 #define OK	0
 #define ERROR	-1
@@ -28,7 +48,7 @@
 
 using namespace RIB;
 
-const string appName = "Remote_open_control_kit_enabled_target_(Rocket)";
+const string appName = "RocketMotion(RM)";
 const uint32_t sizeOfUserDataStruct = sizeof(UserDataStruct);
 UserDataStruct myUserDataStruct = { };
 
@@ -49,7 +69,7 @@ void *stayAlive(void *userDataStruct) {
 	providerRibConnection.RequestRibEnvironmentConfig();
 	RIB::ConsistentDataTransfer consistentDataTransfer = providerRibConnection.addLifetimeBuffer(
 				appName + "Shm",
-				"Rocket motion for Digger",
+				"RocketMotion",
 				"V0.1",
 				10,
 				myUserDataStruct,
@@ -72,7 +92,7 @@ void *stayAlive(void *userDataStruct) {
 	pthread_exit (NULL);
 }
 
-int connect() {
+int RIB_connect() {
 
 	pthread_t threads[1];
 	int rc = pthread_create(&threads[0], NULL, stayAlive,
@@ -85,7 +105,7 @@ int connect() {
 	return OK;
 }
 
-int disconnect() {
+int RIB_disconnect() {
 	//providerRibConnection.Disconnect(); //not implemented
 	munlockall();
 	return OK;
