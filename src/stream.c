@@ -40,6 +40,7 @@
 #include <netdb.h>
 #include <ctype.h>
 #include <fcntl.h>
+#include "motionRIB.h"
 
 #define STREAM_REALM       "Motion Stream Security Access"
 #define KEEP_ALIVE_TIMEOUT 100
@@ -1328,6 +1329,8 @@ void stream_put(struct context *cnt, struct stream *stm, int *stream_count, unsi
             /* Fill in the image length into the header. */
             imgsize = sprintf(len, "%9ld\r\n\r\n", tmpbuffer->size);
             memcpy(wptr - imgsize, len, imgsize);
+
+			//RIB_send((char*)wptr, tmpbuffer->size);
 
             /* Append a CRLF for good measure. */
             memcpy(wptr + tmpbuffer->size, "\r\n", 2);

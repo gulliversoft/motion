@@ -1,7 +1,7 @@
 /*
- * DataExchangeBuffer.h
+ * motionRIB.h
  *
- *  Created on: 02.01.2020
+ *  Created on: 02.08.2020
  *      Author: Shishkov Martin
  */
 

@@ -1508,7 +1508,6 @@ static int motion_init(struct context *cnt)
 
     if (cnt->conf.stream_preview_method == 99){
         /* This is the RIB entry */
-		RIB_connect();
         /* Initialize stream server if stream port is specified to not 0 */
         if (cnt->conf.stream_port) {
             if (stream_init (&(cnt->stream), cnt->conf.stream_port, cnt->conf.stream_localhost,
@@ -1550,6 +1549,12 @@ static int motion_init(struct context *cnt)
     cnt->rolling_average_data = NULL;
     cnt->rolling_average_limit = 10 * cnt->conf.framerate;
     cnt->rolling_average_data = mymalloc(sizeof(cnt->rolling_average_data) * cnt->rolling_average_limit);
+
+    MOTION_LOG(NTC, TYPE_ALL, NO_ERRNO,
+       _("frame_delay %d conf.framerate %d averagedatabuffer %d"),
+       cnt->frame_delay,
+       cnt->conf.framerate,
+       cnt->rolling_average_limit);
 
     /* Preset history buffer with expected frame rate */
     for (indx = 0; indx < cnt->rolling_average_limit; indx++)
@@ -3625,7 +3630,7 @@ static int motion_check_threadcount(void){
  *
  * Returns: Motion exit status = 0 always
  */
-int main (int argc, char **argv)
+int mainOld (int argc, char **argv)
 {
     int i;
 

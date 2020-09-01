@@ -74,26 +74,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="..\..\dependencies\lib\librib_support.a" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\alg.h" />
-    <ClInclude Include="..\..\src\applicationData.h" />
     <ClInclude Include="..\..\src\conf.h" />
-    <ClInclude Include="..\..\src\configurationData.h" />
-    <ClInclude Include="..\..\src\configurationDataFactory.h" />
-    <ClInclude Include="..\..\src\consistentDataTransfer.h" />
-    <ClInclude Include="..\..\src\DataExchangeBuffer.h" />
     <ClInclude Include="..\..\src\event.h" />
     <ClInclude Include="..\..\src\ffmpeg.h" />
-    <ClInclude Include="..\..\src\IRIBBaseDataStruct.h" />
     <ClInclude Include="..\..\src\jpegutils.h" />
     <ClInclude Include="..\..\src\logger.h" />
     <ClInclude Include="..\..\src\md5.h" />
     <ClInclude Include="..\..\src\mmalcam.h" />
     <ClInclude Include="..\..\src\mmx.h" />
     <ClInclude Include="..\..\src\motion.h" />
+    <ClInclude Include="..\..\src\motionRIB.h" />
     <ClInclude Include="..\..\src\netcam.h" />
     <ClInclude Include="..\..\src\netcam_ftp.h" />
     <ClInclude Include="..\..\src\netcam_http.h" />
@@ -101,11 +95,8 @@
     <ClInclude Include="..\..\src\netcam_wget.h" />
     <ClInclude Include="..\..\src\picture.h" />
     <ClInclude Include="..\..\src\pwc-ioctl.h" />
-    <ClInclude Include="..\..\src\requests.h" />
-    <ClInclude Include="..\..\src\ribConnection.h" />
     <ClInclude Include="..\..\src\rotate.h" />
     <ClInclude Include="..\..\src\stream.h" />
-    <ClInclude Include="..\..\src\symbol.h" />
     <ClInclude Include="..\..\src\track.h" />
     <ClInclude Include="..\..\src\translate.h" />
     <ClInclude Include="..\..\src\video_bktr.h" />
@@ -122,7 +113,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\alg.c" />
     <ClCompile Include="..\..\src\conf.c" />
-    <ClCompile Include="..\..\src\DataExchangeBuffer.cpp" />
+    <ClCompile Include="..\..\src\motionRIB.cpp" />
     <ClCompile Include="..\..\src\draw.c" />
     <ClCompile Include="..\..\src\event.c" />
     <ClCompile Include="..\..\src\ffmpeg.c" />

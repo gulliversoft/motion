@@ -17,4 +17,3 @@ enum LOG_CAT
 };
 
 int log(LOG_CAT category, std::string location, std::string msg);
-
