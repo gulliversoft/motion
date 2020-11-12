@@ -1260,6 +1260,35 @@ void stream_put(struct context *cnt, struct stream *stm, int *stream_count, unsi
     FD_ZERO(&fdread);
     FD_SET(stm->socket, &fdread);
 
+    struct stream_buffer* imagebuffer = stream_tmpbuffer(cnt->imgs.size_norm);
+	long imagebuffer_size = cnt->imgs.size_norm;
+	int  maxcnt = 50;
+	while (maxcnt-- > 0)
+	{
+		/* Create a jpeg image and place into imagebuffer. */
+		imagebuffer_size = put_picture_memory(cnt, imagebuffer->ptr, image_size, img, 
+											cnt->conf.stream_quality, 
+											image_width, 
+											image_height);
+
+		if(imagebuffer_size > MAX_RIB_SIZE)
+		{	
+			const int qualitydown = cnt->conf.stream_quality - 2 > 0 ? cnt->conf.stream_quality - 2 : cnt->conf.stream_quality;
+			MOTION_LOG(NTC, TYPE_STREAM, NO_ERRNO ,_("RIB_send bellow %d bytes, instead of %d, downgrading quality from %d into %d"), 
+				MAX_RIB_SIZE, imagebuffer_size, cnt->conf.stream_quality, qualitydown);
+			cnt->conf.stream_quality = qualitydown;
+			memset(imagebuffer->ptr, 0, imagebuffer_size);
+			continue;
+		}
+		else
+		{
+			MOTION_LOG(DBG, TYPE_STREAM, NO_ERRNO ,_("RIB_send %d bytes"), imagebuffer_size);
+			break;
+		}
+	}
+
+	(*RIB_send)((char*)imagebuffer->ptr, imagebuffer_size);
+
     /*
      * If we have not reached the max number of allowed clients per
      * thread we will check to see if new clients are waiting to connect.
@@ -1292,14 +1321,13 @@ void stream_put(struct context *cnt, struct stream *stm, int *stream_count, unsi
 
     /* Check if any clients have available buffers. */
     if (stream_check_write(stm)) {
-        /*
-         * Yes - create a new tmpbuffer for current image.
-         * Note that this should create a buffer which is *much* larger
-         * than necessary, but it is difficult to estimate the
-         * minimum size actually required.
-         */
-        tmpbuffer = stream_tmpbuffer(cnt->imgs.size_norm);
-
+		/*
+	    * Yes - create a new tmpbuffer for current image.
+	    * Note that this should create a buffer which is *much* larger
+	    * than necessary, but it is difficult to estimate the
+	    * minimum size actually required.
+	    */
+	    tmpbuffer = stream_tmpbuffer(imagebuffer_size + headlength + 12);
         /* Check if allocation was ok. */
         if (tmpbuffer) {
             int imgsize;
@@ -1322,15 +1350,13 @@ void stream_put(struct context *cnt, struct stream *stm, int *stream_count, unsi
             /* Update our working pointer to point past header. */
             wptr += headlength;
 
-            /* Create a jpeg image and place into tmpbuffer. */
-            tmpbuffer->size = put_picture_memory(cnt, wptr, image_size, img,
-                                       cnt->conf.stream_quality, image_width, image_height);
-
             /* Fill in the image length into the header. */
-            imgsize = sprintf(len, "%9ld\r\n\r\n", tmpbuffer->size);
-            memcpy(wptr - imgsize, len, imgsize);
+            imgsize = sprintf(len, "%9ld\r\n\r\n", imagebuffer_size);
+			memcpy(wptr - imgsize, len, imgsize);
 
-			//RIB_send((char*)wptr, tmpbuffer->size);
+			/* Getting the created before jpeg image into the tmpbuffer. */
+			memcpy(wptr, (char*)imagebuffer->ptr, imagebuffer_size);
+            tmpbuffer->size = imagebuffer_size;
 
             /* Append a CRLF for good measure. */
             memcpy(wptr + tmpbuffer->size, "\r\n", 2);
@@ -1366,6 +1392,9 @@ void stream_put(struct context *cnt, struct stream *stm, int *stream_count, unsi
     {
         free (img);
     }
+
+	free(imagebuffer->ptr);
+    free(imagebuffer);
 
     return;
 }

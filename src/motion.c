@@ -14,7 +14,6 @@
 #include "picture.h"
 #include "rotate.h"
 #include "webu.h"
-#include "DataExchangeBuffer.h"
 
 
 #define IMAGE_BUFFER_FLUSH ((unsigned int)-1)

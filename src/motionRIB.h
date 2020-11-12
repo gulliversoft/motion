@@ -6,14 +6,12 @@
  */
 
 #pragma once
-
+const unsigned int MAX_RIB_SIZE = 1024 * 80;
 #ifdef __cplusplus
 extern "C"
 {
 #endif
-int RIB_send(char* data, unsigned int size);
-int RIB_connect();
-int RIB_disconnect();
+int (*RIB_send)(char*, unsigned int);
 #ifdef __cplusplus
 }
 #endif

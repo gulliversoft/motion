@@ -37,8 +37,15 @@ int main (int argc, char **argv) {
         fprintf(stderr, "%s\n", error);
         exit(EXIT_FAILURE);
     }
-
+	
 	(*RIB_connect)();
+
+	*(void **) (&RIB_send) = dlsym(handle, "RIB_send");
+
+	if ((error = dlerror()) != NULL)  {
+        fprintf(stderr, "%s\n", error);
+        exit(EXIT_FAILURE);
+    }
 
 	mainOld (argc, argv);
 
